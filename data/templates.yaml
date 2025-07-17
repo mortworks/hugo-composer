@@ -1,0 +1,37 @@
+# templates.yaml
+# ------------------------
+# This file contains site-specific post templates.
+# These templates are only available within this blog and are defined
+# separately from the global templates in hugo-tools/data/global-templates.yaml.
+#
+# Each key defines a post "type" which can be selected during post creation.
+# Each entry must include at least:
+#   - layout:   (string) the layout to trigger in single.html
+#   - structure: (list) an ordered list of content blocks
+#   - anchors:   (list) optional IDs or references to tag key points in the post
+
+# Example template (uncomment to use)
+#
+# lesson:
+#   layout: post
+#   structure:
+#     - type: text
+#       ref: key-idea
+#     - type: scaffold
+#       ref: heaney-structure
+#     - type: reflection
+#       ref: default-reflection
+#   anchors:
+#     - key-idea
+#     - heaney-structure
+
+# revision:
+#   layout: post
+#   structure:
+#     - type: scaffold
+#       ref: knowledge-check-ks3
+#     - type: scaffold
+#       ref: terminology-recap
+#   anchors:
+#     - knowledge-check-ks3
+#     - terminology-recap

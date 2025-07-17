@@ -1,0 +1,20 @@
+{{/*
+  render-composite.html
+  Assembles a post dynamically from structured components.
+*/}}
+
+{{ $structure := .Params.structure }}
+<main class="composite-post">
+  <article class="prose">
+    <header>
+      <h1>{{ .Title }}</h1>
+      {{ partial "post_meta.html" . }}
+    </header>
+
+    {{ range $structure }}
+      {{ partial "composer/render-block.html" . }}
+    {{ end }}
+
+    {{ .Content }}
+  </article>
+</main>

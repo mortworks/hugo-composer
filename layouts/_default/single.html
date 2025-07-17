@@ -1,0 +1,34 @@
+{{/*
+  single.html
+  Central dispatcher for content rendering.
+  Uses composite renderer if 'template' param is set or structure is provided.
+*/}}
+
+{{ $structure := .Params.structure }}
+
+{{/* Check for a declared template in front matter */}}
+{{ $template := .Params.template }}
+
+{{/* If a template is set but no structure, try to load structure from templates.yaml */}}
+{{ if and (not $structure) $template }}
+  {{ with site.Data.templates }}
+    {{ $resolved := index . $template }}
+    {{ if $resolved }}
+      {{ $structure = $resolved.structure }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if $structure }}
+  {{ partial "composer/render-composite.html" (dict "Params" (merge .Params (dict "structure" $structure)) "Title" .Title "Content" .Content) }}
+{{ else }}
+  <main class="post-content">
+    <article class="prose">
+      <header>
+        <h1>{{ .Title }}</h1>
+        {{ partial "post_meta.html" . }}
+      </header>
+      {{ .Content }}
+    </article>
+  </main>
+{{ end }}

@@ -1,0 +1,18 @@
+{{/*
+  render-block.html
+  Renders a single content block.
+  Expects a .Page context (e.g., a regular page or a reusable scaffold).
+*/}}
+
+{{ with . }}
+  {{ $content := .Content }}
+  {{ if $content }}
+    <section id="{{ .File.BaseFileName }}" class="content-block">
+      <article class="prose">
+        {{ $content | safeHTML }}
+      </article>
+    </section>
+  {{ end }}
+{{ else }}
+  {{ warnf "render-block.html called with nil context" }}
+{{ end }}

@@ -3,20 +3,20 @@
 {{- $dateInfo := partial "metadata/date-info.html" . }}
 {{- $scratch.Add "meta" (slice (printf "<span title='%s'>%s</span>" .Date $dateInfo)) }}
 
-{{- if (.Param "ShowReadingTime") -}}
+{{- if .Params.ShowReadingTime }}
   {{- $scratch.Add "meta" (slice (i18n "read_time" .ReadingTime | default (printf "%d min" .ReadingTime))) }}
 {{- end }}
 
-{{- if (.Param "ShowWordCount") -}}
+{{- if .Params.ShowWordCount }}
   {{- $scratch.Add "meta" (slice (i18n "words" .WordCount | default (printf "%d words" .WordCount))) }}
 {{- end }}
 
-{{- if not (.Param "hideAuthor") -}}
+{{- if not .Params.hideAuthor }}
   {{- with (partial "author.html" .) }}
     {{- $scratch.Add "meta" (slice .) }}
   {{- end }}
 {{- end }}
 
 {{- with ($scratch.Get "meta") }}
-  {{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
-{{- end -}}
+  {{- delimit . "&nbsp;·&nbsp;" | safeHTML }}
+{{- end }}

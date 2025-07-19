@@ -1,10 +1,24 @@
 {{ define "main" }}
-  <article class="prose">
-    <header>
-      <h1>{{ .Title }}</h1>
-      {{ partial "post_meta.html" . }}
-    </header>
+  {{ $structure := .Params.structure }}
+  {{ $template := .Params.template }}
 
-    {{ partial "composer/render-post.html" . }}
-  </article>
+  {{ if and (not $structure) $template }}
+    {{ with site.Data.templates }}
+      {{ $resolved := index . $template }}
+      {{ if $resolved }}
+        {{ $structure = $resolved.structure }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ if $structure }}
+    {{ partial "composer/render-composite.html" (dict
+      "Params" (merge .Params (dict "structure" $structure))
+      "Title" .Title
+      "Content" .Content
+    ) }}
+  {{ else }}
+    {{/* Delegate to theme */}}
+    {{ block "main" . }}{{ end }}
+  {{ end }}
 {{ end }}

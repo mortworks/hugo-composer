@@ -20,6 +20,7 @@
 {{ end }}
 
 {{ if $structure }}
+  <p style="color:red;">🧩 Composite renderer activated for {{ .Title }}</p>
   {{ partial "composer/render-composite.html" (dict "Params" (merge .Params (dict "structure" $structure)) "Title" .Title "Content" .Content) }}
 {{ else }}
   <main class="post-content">

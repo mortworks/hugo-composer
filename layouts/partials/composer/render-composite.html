@@ -12,7 +12,10 @@
     </header>
 
     {{ range $structure }}
-      {{ partial "composer/render-block.html" . }}
+      {{ partial "composer/render-block.html" (dict
+        "ref" .ref
+        "anchors" $.Params.anchors
+      ) }}
     {{ end }}
 
     {{ .Content }}

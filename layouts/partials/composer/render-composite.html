@@ -13,13 +13,11 @@
     
     {{ $anchors := dict }}
     {{ with .Params.anchors }}
-      {{ range $pair := . | dict }}
-        {{ $k := index $pair 0 }}
-        {{ $v := index $pair 1 }}
-        {{ $anchors = merge $anchors (dict (string $k) $v) }}
+      {{ range $k, $v := . }}
+        {{ $key := printf "%s" $k }} <!-- ensures the key is a string -->
+        {{ $anchors = merge $anchors (dict $key $v) }}
       {{ end }}
     {{ end }}
-
 
     <pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
     <pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>

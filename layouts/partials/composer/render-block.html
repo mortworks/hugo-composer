@@ -1,19 +1,28 @@
 {{/*
   render-block.html
-  Renders a single content block based on ref + anchors passed in dict.
+  Renders a single content block.
+  Accepts:
+    - ref: a key to look up in anchors
+    - anchors: a map of ref → markdown content
 */}}
 
 {{ $ref := .ref }}
 {{ $anchors := .anchors }}
-{{ $anchor := index $anchors $ref }}
 
-<section id="{{ $ref }}" class="content-block">
-  <article class="prose">
-    <h2>{{ $ref }}</h2>
-    {{ if $anchor }}
-      {{ $anchor | markdownify }}
-    {{ else }}
-      <p>⚠️ No anchor found for <code>{{ $ref }}</code>.</p>
-    {{ end }}
-  </article>
-</section>
+{{ if eq (printf "%T" $anchors) "map[string]interface {}" }}
+  {{ with index $anchors $ref }}
+    <section id="{{ $ref }}" class="content-block">
+      <article class="prose">
+        {{ . | markdownify }}
+      </article>
+    </section>
+  {{ else }}
+    <div class="missing-anchor">
+      ⚠️ <code>{{ $ref }}</code> not found in anchors.
+    </div>
+  {{ end }}
+{{ else }}
+  <div class="bad-anchors-type">
+    ⚠️ Invalid anchors data: expected map, got <code>{{ printf "%T" $anchors }}</code>
+  </div>
+{{ end }}

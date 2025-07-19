@@ -11,13 +11,18 @@
       {{ partial "post_meta.html" . }}
     </header>
     
-    <pre>🔍 anchors param: {{ .Params.anchors | jsonify }}</pre>
-    <pre>📦 anchors type: {{ printf "%T" .Params.anchors }}</pre>
+    {{ $anchors := dict }}
+    {{ range $k, $v := .Params.anchors }}
+      {{ $anchors = merge $anchors (dict $k $v) }}
+    {{ end }}
+
+    <pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
+    <pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>
 
     {{ range $structure }}
       {{ partial "composer/render-block.html" (dict
         "ref" .ref
-        "anchors" $.Params.anchors
+        "anchors" $anchors
       ) }}
     {{ end }}
 

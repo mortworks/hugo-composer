@@ -1,18 +1,20 @@
 {{/*
   render-block.html
-  Renders a single content block.
-  Expects a .Page context (e.g., a regular page or a reusable scaffold).
+  Renders a single block from the .Params.anchors map.
+  Expects:
+    - .ref      (string)    — ID of the anchor to render
+    - .anchors  (dict)      — map of ref → markdown content
 */}}
 
-{{ with . }}
-  {{ $content := .Content }}
-  {{ if $content }}
-    <section id="{{ .File.BaseFileName }}" class="content-block">
-      <article class="prose">
-        {{ $content | safeHTML }}
-      </article>
-    </section>
-  {{ end }}
-{{ else }}
-  {{ warnf "render-block.html called with nil context" }}
-{{ end }}
+{{- $ref := .ref -}}
+{{- $anchor := index .anchors $ref -}}
+
+{{- if $anchor }}
+  <section id="{{ $ref }}" class="content-block">
+    <article class="prose">
+      {{ $anchor | markdownify }}
+    </article>
+  </section>
+{{- else }}
+  {{ warnf "⚠️  No anchor found for ref '%s'" $ref }}
+{{- end }}

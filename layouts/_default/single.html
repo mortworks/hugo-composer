@@ -1,8 +1,4 @@
 {{ define "main" }}
-  {{/* Debug line - remove later */}}
-  <h1>HELLO FROM SINGLE.HTML</h1>
-  <pre>🧪 Structure param: {{ .Params.structure | jsonify }}</pre>
-
   {{ $structure := .Params.structure }}
   {{ $template := .Params.template }}
 
@@ -15,22 +11,15 @@
     {{ end }}
   {{ end }}
 
-  {{ if $structure }}
-    <p style="color:red;">🧩 Composite renderer activated for {{ .Title }}</p>
+  {{ if or $structure $template }}
+    {{/* Composite post rendering */}}
     {{ partial "composer/render-composite.html" (dict
       "Params" (merge .Params (dict "structure" $structure))
       "Title" .Title
       "Content" .Content
     ) }}
   {{ else }}
-    <main class="post-content">
-      <article class="prose">
-        <header>
-          <h1>{{ .Title }}</h1>
-          {{ partial "post_meta.html" . }}
-        </header>
-        {{ .Content }}
-      </article>
-    </main>
+    {{/* Default fallback rendering */}}
+    {{- partial "post/content.html" . -}}
   {{ end }}
 {{ end }}

@@ -2,7 +2,7 @@
   {{ $structure := .Params.structure }}
   {{ $template := .Params.template }}
 
-  {{/* Attempt to resolve structure from named template */}}
+  {{/* Attempt to resolve structure if not directly set */}}
   {{ if and (not $structure) $template }}
     {{ with site.Data.templates }}
       {{ $resolved := index . $template }}
@@ -13,17 +13,11 @@
   {{ end }}
 
   {{ if $structure }}
-    <article class="prose">
-      <header>
-        <h1>{{ .Title }}</h1>
-        {{ partial "post_meta.html" . }}
-      </header>
-      {{ partial "composer/render-composite.html" (dict
-        "Params" (merge .Params (dict "structure" $structure))
-        "Title" .Title
-        "Content" .Content
-      ) }}
-    </article>
+    {{ partial "composer/render-composite.html" (dict
+      "Params" (merge .Params (dict "structure" $structure))
+      "Title" .Title
+      "Content" .Content
+    ) }}
   {{ else }}
     <article class="prose">
       <header>

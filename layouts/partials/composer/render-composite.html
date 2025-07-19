@@ -1,31 +1,34 @@
 {{/*
   render-composite.html
   Assembles a post dynamically from structured components.
-  Assumes PaperMod provides <main> and <article> elsewhere.
 */}}
 
 {{ $structure := .Params.structure }}
+<main class="composite-post">
+  <article class="prose">
+    <header>
+      <h1>{{ .Title }}</h1>
+      {{ partial "post_meta.html" . }}
+    </header>
+    
+    {{ $anchors := dict }}
+    {{ with .Params.anchors }}
+      {{ range $k, $v := . }}
+        {{ $key := printf "%s" $k }} <!-- ensures the key is a string -->
+        {{ $anchors = merge $anchors (dict $key $v) }}
+      {{ end }}
+    {{ end }}
 
-{{/* Defensive conversion of anchors to string-keyed map */}}
-{{ $anchors := dict }}
-{{ with .Params.anchors }}
-  {{ range $k, $v := . }}
-    {{ $key := printf "%s" $k }}
-    {{ $anchors = merge $anchors (dict $key $v) }}
-  {{ end }}
-{{ end }}
+    <pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
+    <pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>
 
-{{/* Debug info (safe to remove) */}}
-<pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
-<pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>
+    {{ range $structure }}
+      {{ partial "composer/render-block.html" (dict
+        "ref" .ref
+        "anchors" $anchors
+      ) }}
+    {{ end }}
 
-{{/* Render content blocks in order */}}
-{{ range $structure }}
-  {{ partial "composer/render-block.html" (dict
-    "ref" .ref
-    "anchors" $anchors
-  ) }}
-{{ end }}
-
-{{/* Optional fallback content */}}
-{{ .Content }}
+    {{ .Content }}
+  </article>
+</main>

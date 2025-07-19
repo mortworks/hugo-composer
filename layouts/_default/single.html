@@ -1,7 +1,8 @@
-{{ define "main" }}
+<!-- {{ define "main" }}
   {{ $structure := .Params.structure }}
   {{ $template := .Params.template }}
 
+  {{/* Attempt to resolve structure if not directly set */}}
   {{ if and (not $structure) $template }}
     {{ with site.Data.templates }}
       {{ $resolved := index . $template }}
@@ -11,15 +12,19 @@
     {{ end }}
   {{ end }}
 
-  {{ if or $structure $template }}
-    {{/* Composite post rendering */}}
+  {{ if $structure }}
     {{ partial "composer/render-composite.html" (dict
       "Params" (merge .Params (dict "structure" $structure))
       "Title" .Title
       "Content" .Content
     ) }}
   {{ else }}
-    {{/* Default fallback rendering */}}
-    {{- partial "post/content.html" . -}}
+    <article class="prose">
+      <header>
+        <h1>{{ .Title }}</h1>
+        {{ partial "post_meta.html" . }}
+      </header>
+      {{ .Content }}
+    </article>
   {{ end }}
-{{ end }}
+{{ end }} -->

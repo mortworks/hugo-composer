@@ -5,30 +5,19 @@
 
 {{ $structure := .Params.structure }}
 
-<article class="prose">
-  <header>
-    <h1>{{ .Title }}</h1>
-    {{ partial "post_meta.html" . }}
-  </header>
-
-  {{ $anchors := dict }}
-  {{ with .Params.anchors }}
-    {{ range $k, $v := . }}
-      {{ $key := printf "%s" $k }} <!-- ensure key is string -->
-      {{ $anchors = merge $anchors (dict $key $v) }}
-    {{ end }}
+{{ $anchors := dict }}
+{{ with .Params.anchors }}
+  {{ range $k, $v := . }}
+    {{ $key := printf "%s" $k }}
+    {{ $anchors = merge $anchors (dict $key $v) }}
   {{ end }}
+{{ end }}
 
-  {{/* Debug output (optional - can comment out later) */}}
-  <pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
-  <pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>
+{{ range $structure }}
+  {{ partial "composer/render-block.html" (dict
+    "ref" .ref
+    "anchors" $anchors
+  ) }}
+{{ end }}
 
-  {{ range $structure }}
-    {{ partial "composer/render-block.html" (dict
-      "ref" .ref
-      "anchors" $anchors
-    ) }}
-  {{ end }}
-
-  {{ .Content }}
-</article>
+{{ .Content }}

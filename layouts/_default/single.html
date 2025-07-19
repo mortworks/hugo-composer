@@ -12,19 +12,19 @@
     {{ end }}
   {{ end }}
 
-  {{ if $structure }}
-    {{ partial "composer/render-composite.html" (dict
-      "Params" (merge .Params (dict "structure" $structure))
-      "Title" .Title
-      "Content" .Content
-    ) }}
-  {{ else }}
-    <article class="prose">
+  <article class="prose">
+    {{ if $structure }}
+      {{ partial "composer/render-composite.html" (dict
+        "Params" (merge .Params (dict "structure" $structure))
+        "Title" .Title
+        "Content" .Content
+      ) }}
+    {{ else }}
       <header>
         <h1>{{ .Title }}</h1>
         {{ partial "post_meta.html" . }}
       </header>
       {{ .Content }}
-    </article>
-  {{ end }}
+    {{ end }}
+  </article>
 {{ end }}

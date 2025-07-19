@@ -3,36 +3,32 @@
   Assembles a post dynamically from structured components.
 */}}
 
-<main class="post-content">
-  <article class="prose dark:prose-invert max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+{{ $structure := .Params.structure | default slice }}
 
-    <header class="mb-4">
-      <h1 class="text-3xl font-bold mb-2">{{ .Title }}</h1>
-      {{ partial "post_meta.html" . }}
-    </header>
+<article class="prose">
+  <header>
+    <h1>{{ .Title }}</h1>
+    {{ partial "post_meta.html" . }}
+  </header>
 
-    {{ $structure := .Params.structure }}
-    {{ $anchors := dict }}
-
-    {{ with .Params.anchors }}
-      {{ range $k, $v := . }}
-        {{ $key := printf "%s" $k }}
-        {{ $anchors = merge $anchors (dict $key $v) }}
-      {{ end }}
+  {{ $anchors := dict }}
+  {{ with .Params.anchors }}
+    {{ range $k, $v := . }}
+      {{ $key := printf "%s" $k }} <!-- ensure key is string -->
+      {{ $anchors = merge $anchors (dict $key $v) }}
     {{ end }}
+  {{ end }}
 
-    {{ if site.Params.debugComposite }}
-      <pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
-      <pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>
-    {{ end }}
+  {{/* Debug output (optional - can comment out later) */}}
+  <pre>🔍 anchors param: {{ $anchors | jsonify }}</pre>
+  <pre>📦 anchors type: {{ printf "%T" $anchors }}</pre>
 
-    {{ range $structure }}
-      {{ partial "composer/render-block.html" (dict
-        "ref" .ref
-        "anchors" $anchors
-      ) }}
-    {{ end }}
+  {{ range $structure }}
+    {{ partial "composer/render-block.html" (dict
+      "ref" .ref
+      "anchors" $anchors
+    ) }}
+  {{ end }}
 
-    {{ .Content }}
-  </article>
-</main>
+  {{ .Content }}
+</article>

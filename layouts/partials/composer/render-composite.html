@@ -10,6 +10,9 @@
       <h1>{{ .Title }}</h1>
       {{ partial "post_meta.html" . }}
     </header>
+    
+    <pre>🔍 anchors param: {{ .Params.anchors | jsonify }}</pre>
+    <pre>📦 anchors type: {{ printf "%T" .Params.anchors }}</pre>
 
     {{ range $structure }}
       {{ partial "composer/render-block.html" (dict

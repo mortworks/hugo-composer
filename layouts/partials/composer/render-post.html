@@ -1,0 +1,32 @@
+{{/* Resolve structure */}}
+{{ $structure := .Params.structure | default slice }}
+{{ $template := .Params.template }}
+
+{{ if and (eq (len $structure) 0) $template }}
+  {{ with site.Data.templates }}
+    {{ $resolved := index . $template }}
+    {{ if $resolved }}
+      {{ $structure = $resolved.structure }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Build anchor map */}}
+{{ $anchors := dict }}
+{{ with .Params.anchors }}
+  {{ range $k, $v := . }}
+    {{ $anchors = merge $anchors (dict (printf "%s" $k) $v) }}
+  {{ end }}
+{{ end }}
+
+{{/* Render dynamically if structure exists */}}
+{{ if gt (len $structure) 0 }}
+  {{ range $structure }}
+    {{ partial "composer/render-block.html" (dict
+      "ref" .ref
+      "anchors" $anchors
+    ) }}
+  {{ end }}
+{{ else }}
+  {{ partial "post/content.html" . }}
+{{ end }}

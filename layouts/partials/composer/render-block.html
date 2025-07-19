@@ -1,18 +1,19 @@
 {{/*
   render-block.html
-  Renders a single content block from inline front matter anchors.
-  Expects a map with a `ref` key and a top-level `anchors` map in `.Params`.
+  Renders a single content block based on ref + anchors passed in dict.
 */}}
 
-{{ $id := .ref }}
-{{ $anchor := $.Params.anchors.$id }}
+{{ $ref := .ref }}
+{{ $anchors := .anchors }}
+{{ $anchor := index $anchors $ref }}
 
-{{ if $anchor }}
-  <section id="{{ $id }}" class="content-block">
-    <article class="prose">
+<section id="{{ $ref }}" class="content-block">
+  <article class="prose">
+    <h2>{{ $ref }}</h2>
+    {{ if $anchor }}
       {{ $anchor | markdownify }}
-    </article>
-  </section>
-{{ else }}
-  {{ warnf "No anchor found for ref: %s" $id }}
-{{ end }}
+    {{ else }}
+      <p>⚠️ No anchor found for <code>{{ $ref }}</code>.</p>
+    {{ end }}
+  </article>
+</section>

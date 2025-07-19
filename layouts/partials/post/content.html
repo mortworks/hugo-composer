@@ -1,0 +1,12 @@
+{{/* post/content.html – handles content rendering */}}
+
+{{ $structure := .Params.structure }}
+{{ $template := .Params.template }}
+
+{{ if or $structure $template }}
+  {{/* Composite post rendering */}}
+  {{ partial "composer/render-composite.html" . }}
+{{ else }}
+  {{/* Fall back to default content */}}
+  {{ .Content }}
+{{ end }}

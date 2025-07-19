@@ -1,18 +1,12 @@
-{{/*
-  single.html
-  Central dispatcher for content rendering.
-  Uses composite renderer if 'template' param is set or structure is provided.
-*/}}
+{{ define "main" }}
 
-<h1>HELLO FROM SINGLE.HTML</h1>
+{{/* Dispatcher for composite vs standard posts */}}
 
 {{ $structure := .Params.structure }}
 <pre>🧪 Structure param: {{ .Params.structure | jsonify }}</pre>
 
-{{/* Check for a declared template in front matter */}}
 {{ $template := .Params.template }}
 
-{{/* If a template is set but no structure, try to load structure from templates.yaml */}}
 {{ if and (not $structure) $template }}
   {{ with site.Data.templates }}
     {{ $resolved := index . $template }}
@@ -24,7 +18,11 @@
 
 {{ if $structure }}
   <p style="color:red;">🧩 Composite renderer activated for {{ .Title }}</p>
-  {{ partial "composer/render-composite.html" (dict "Params" (merge .Params (dict "structure" $structure)) "Title" .Title "Content" .Content) }}
+  {{ partial "composer/render-composite.html" (dict
+    "Params" (merge .Params (dict "structure" $structure))
+    "Title" .Title
+    "Content" .Content
+  ) }}
 {{ else }}
   <main class="post-content">
     <article class="prose">
@@ -35,4 +33,6 @@
       {{ .Content }}
     </article>
   </main>
+{{ end }}
+
 {{ end }}

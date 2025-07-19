@@ -1,37 +1,73 @@
-# templates.yaml
-# ------------------------
-# This file contains site-specific post templates.
-# These templates are only available within this blog and are defined
-# separately from the global templates in hugo-tools/data/global-templates.yaml.
-#
-# Each key defines a post "type" which can be selected during post creation.
-# Each entry must include at least:
-#   - layout:   (string) the layout to trigger in single.html
-#   - structure: (list) an ordered list of content blocks
-#   - anchors:   (list) optional IDs or references to tag key points in the post
+# templates.yaml — central source for post scaffolds
+# This file supports Hugo blogs using the hugo-composer submodule.
+# Each key represents a type of post template.
+# Add new entries over time. Maintain clarity with comments and examples.
 
-# Example template (uncomment to use)
-#
+blank:
+  # A standard Markdown post with no composite structure.
+  layout: default
+  structure: []
+  anchors: []
+
+custom-composite:
+  # A hand-built composite post with example content blocks
+  layout: lesson
+  structure:
+    - ref: intro
+    - ref: main-points
+    - ref: conclusion
+  anchors:
+    - id: intro
+      title: Introduction
+    - id: main-points
+      title: Main Points
+    - id: conclusion
+      title: Conclusion
+
+test-post:
+  layout: composite
+  structure:
+    - ref: test-intro
+    - ref: test-body
+    - ref: test-summary
+  anchors:
+    test-intro: |
+      ## Intro
+
+      This is a test intro paragraph.
+    test-body: |
+      ## Main body
+
+      This is where your main content goes.
+    test-summary: |
+      ## Summary
+
+      Wrap-up thoughts go here.
+
 # lesson:
-#   layout: post
+#   layout: lesson
 #   structure:
-#     - type: text
-#       ref: key-idea
-#     - type: scaffold
-#       ref: heaney-structure
-#     - type: reflection
-#       ref: default-reflection
+#     - ref: warmup
+#     - ref: model
+#     - ref: analysis
 #   anchors:
-#     - key-idea
-#     - heaney-structure
+#     - id: warmup
+#       title: Warm-up
+#     - id: model
+#       title: Model Paragraph
+#     - id: analysis
+#       title: Analysis
 
 # revision:
-#   layout: post
+#   layout: revision
 #   structure:
-#     - type: scaffold
-#       ref: knowledge-check-ks3
-#     - type: scaffold
-#       ref: terminology-recap
+#     - ref: recap
+#     - ref: quiz
+#     - ref: summary
 #   anchors:
-#     - knowledge-check-ks3
-#     - terminology-recap
+#     - id: recap
+#       title: Recap
+#     - id: quiz
+#       title: Quick Quiz
+#     - id: summary
+#       title: Summary

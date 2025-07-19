@@ -5,6 +5,7 @@
 */}}
 
 {{ $structure := .Params.structure }}
+<pre>🧪 Structure param: {{ .Params.structure | jsonify }}</pre>
 
 {{/* Check for a declared template in front matter */}}
 {{ $template := .Params.template }}

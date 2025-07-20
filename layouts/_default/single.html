@@ -1,19 +1,6 @@
-{{ block "main" . }}
-  {{ $structure := .Params.structure }}
-  {{ $template := .Params.template }}
+{{- define "main" }}
 
-  {{ if and (not $structure) $template }}
-    {{ with site.Data.templates }}
-      {{ $resolved := index . $template }}
-      {{ if $resolved }}
-        {{ $structure = $resolved.structure }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
+  {{/* Let logic live elsewhere */}}
+  {{ partial "composer/route-post.html" . }}
 
-  {{/* Let PaperMod handle layout */}}
-  {{ partial "post/content.html" (dict
-    "Page" .
-    "Structure" $structure
-  ) }}
-{{ end }}
+{{- end }}

@@ -1,5 +1,3 @@
-{{/* route-post.html */}}
-
 {{/* Extract structure and template from front matter */}}
 {{ $structure := .Params.structure | default nil }}
 {{ $template := .Params.template }}
@@ -14,17 +12,18 @@
   {{ end }}
 {{ end }}
 
-{{/* Only inject custom structure if it's a slice */}}
 {{ $isComposite := eq (printf "%T" $structure) "[]interface {}" }}
 
 {{ if $isComposite }}
-  {{ define "content" }}
-    {{ partial "composer/render-structure.html" (dict
-      "Page" .
-      "Structure" $structure
-    ) }}
+  {{ partial "composer/render-structure.html" (dict
+    "Page" .
+    "Structure" $structure
+  ) }}
+{{ else }}
+  {{/* Let PaperMod handle regular posts (including markdown body) */}}
+  {{ if not (.Param "disableAnchoredHeadings") }}
+    {{ partial "anchored_headings.html" .Content }}
+  {{ else }}
+    {{ .Content }}
   {{ end }}
 {{ end }}
-
-{{/* Always defer to PaperMod's default single template */}}
-{{ template "_default/single.html" . }}

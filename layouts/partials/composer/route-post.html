@@ -1,3 +1,6 @@
+<p>DEBUG: structure = {{ printf "%#v" $structure }}</p>
+
+
 {{/* Extract structure and template from front matter */}}
 {{ $structure := .Params.structure | default nil }}
 {{ $template := .Params.template }}

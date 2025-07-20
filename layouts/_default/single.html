@@ -11,12 +11,9 @@
     {{ end }}
   {{ end }}
 
-  {{ if $structure }}
-    {{ partial "composer/render-structure.html" (dict
-      "Page" .
-      "Structure" $structure
-    ) }}
-  {{ else }}
-    {{ .Render "default" }}
-  {{ end }}
+  {{/* Let PaperMod handle layout */}}
+  {{ partial "post/content.html" (dict
+    "Page" .
+    "Structure" $structure
+  ) }}
 {{ end }}

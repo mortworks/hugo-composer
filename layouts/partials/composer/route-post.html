@@ -1,32 +1,5 @@
 <p>🛠 route-post.html is being called</p>
 
-{{/* Extract structure and template from front matter */}}
-{{ $structure := .Params.structure | default nil }}
-{{ $template := .Params.template }}
-
-{{/* Resolve structure from template if needed */}}
-{{ if and (not $structure) $template }}
-  {{ with site.Data.templates }}
-    {{ $resolved := index . $template }}
-    {{ if and $resolved (isset $resolved "structure") }}
-      {{ $structure = $resolved.structure }}
-    {{ end }}
-  {{ end }}
-{{ end }}
-
-{{/* Determine if this is a composite post */}}
-{{ $isComposite := eq (printf "%T" $structure) "[]interface {}" }}
-
-{{/* Output content accordingly */}}
-{{ if $isComposite }}
-  {{ partial "composer/render-structure.html" (dict
-    "Page" .
-    "Structure" $structure
-  ) }}
-{{ else }}
-  {{ if not (.Param "disableAnchoredHeadings") }}
-    {{ partial "anchored_headings.html" .Content }}
-  {{ else }}
-    {{ .Content }}
-  {{ end }}
-{{ end }}
+<div class="post-content">
+  {{ .Content }}
+</div>

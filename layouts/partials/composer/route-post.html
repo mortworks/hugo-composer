@@ -1,5 +1,28 @@
-<p>🛠 route-post.html is being called</p>
+{{/* composer/route-post.html */}}
 
-<div class="post-content">
-  {{ .Content }}
-</div>
+{{ $structure := .Params.structure | default nil }}
+{{ $template := .Params.template }}
+
+{{ if and (not $structure) $template }}
+  {{ with site.Data.templates }}
+    {{ $resolved := index . $template }}
+    {{ if and $resolved (isset $resolved "structure") }}
+      {{ $structure = $resolved.structure }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ $isComposite := eq (printf "%T" $structure) "[]interface {}" }}
+
+{{ if $isComposite }}
+  {{ partial "composer/render-structure.html" (dict
+    "Page" .
+    "Structure" $structure
+  ) }}
+{{ else }}
+  {{ if not (.Param "disableAnchoredHeadings") }}
+    {{ partial "anchored_headings.html" .Content }}
+  {{ else }}
+    {{ .Content }}
+  {{ end }}
+{{ end }}

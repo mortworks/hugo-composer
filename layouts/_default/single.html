@@ -1,9 +1,3 @@
-{{/* 
-  Override PaperMod’s <main> block to inject dynamic post rendering logic.
-  All rendering is now delegated to composer/route-post.html.
-  If PaperMod updates its single.html structure, this override ensures full independence.
-*/}}
-{{ define "main" }}
-  <p style="color:red;">🔧 Debug: PaperMod override works!</p>
-  {{ .Content }}
-{{ end }}
+<div class="post-content">
+  {{ partial "composer/route-post.html" . }}
+</div>

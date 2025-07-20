@@ -1,4 +1,5 @@
-{{/* Determine structure from front matter or template */}}
+{{/* route-post.html: decides what content to display in place of .Content */}}
+
 {{ $structure := .Params.structure }}
 {{ $template := .Params.template }}
 
@@ -11,12 +12,12 @@
   {{ end }}
 {{ end }}
 
-{{/* If we’ve resolved a structure, inject the block */}}
-{{ if $structure }}
-  {{ define "content" }}
-    {{ partial "composer/render-structure.html" (dict "Page" . "Structure" $structure) }}
+{{ if gt (len $structure) 0 }}
+  {{ partial "composer/render-structure.html" (dict "Page" . "Structure" $structure) }}
+{{ else }}
+  {{ if not (.Param "disableAnchoredHeadings") }}
+    {{ partial "anchored_headings.html" .Content }}
+  {{ else }}
+    {{ .Content }}
   {{ end }}
 {{ end }}
-
-{{/* Now let the original PaperMod template handle layout */}}
-{{ template "theme/_default/single.html" . }}

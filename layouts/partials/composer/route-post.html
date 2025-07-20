@@ -12,17 +12,16 @@
   {{ end }}
 {{ end }}
 
-<p>DEBUG: structure = {{ printf "%#v" $structure }}</p>
-
+{{/* Determine if this is a composite post */}}
 {{ $isComposite := eq (printf "%T" $structure) "[]interface {}" }}
 
+{{/* Output content accordingly */}}
 {{ if $isComposite }}
   {{ partial "composer/render-structure.html" (dict
     "Page" .
     "Structure" $structure
   ) }}
 {{ else }}
-  {{/* Let PaperMod handle regular posts (including markdown body) */}}
   {{ if not (.Param "disableAnchoredHeadings") }}
     {{ partial "anchored_headings.html" .Content }}
   {{ else }}

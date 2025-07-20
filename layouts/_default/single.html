@@ -1,4 +1,4 @@
-{{ define "main" }}
+{{ block "main" . }}
   {{ $structure := .Params.structure }}
   {{ $template := .Params.template }}
 
@@ -17,7 +17,6 @@
       "Structure" $structure
     ) }}
   {{ else }}
-    {{/* Fallback to theme default */}}
-    {{ block "main" . }}{{ end }}
+    {{ .Render "default" }}
   {{ end }}
 {{ end }}

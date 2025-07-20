@@ -1,4 +1,4 @@
-{{/* Determine structure from front matter or templates.yaml */}}
+{{/* Determine structure from front matter or template */}}
 {{ $structure := .Params.structure }}
 {{ $template := .Params.template }}
 
@@ -11,8 +11,12 @@
   {{ end }}
 {{ end }}
 
-{{/* Inject the structure into the page context */}}
-{{ $pageWithStructure := merge . (dict "CompositeStructure" $structure) }}
+{{/* If we’ve resolved a structure, inject the block */}}
+{{ if $structure }}
+  {{ define "content" }}
+    {{ partial "composer/render-structure.html" (dict "Page" . "Structure" $structure) }}
+  {{ end }}
+{{ end }}
 
-{{/* Hand off to the real PaperMod layout */}}
-{{ template "_default/single.html" $pageWithStructure }}
+{{/* Now let the original PaperMod template handle layout */}}
+{{ template "theme/_default/single.html" . }}

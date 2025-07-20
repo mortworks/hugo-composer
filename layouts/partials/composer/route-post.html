@@ -1,0 +1,23 @@
+{{ $structure := .Params.structure }}
+{{ $template := .Params.template }}
+
+{{ if and (not $structure) $template }}
+  {{ with site.Data.templates }}
+    {{ $resolved := index . $template }}
+    {{ if $resolved }}
+      {{ $structure = $resolved.structure }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{- $isComposite := gt (len $structure) 0 }}
+
+{{ if $isComposite }}
+  {{/* Define the content block to override PaperMod’s default */}}
+  {{ define "content" }}
+    {{ partial "composer/render-structure.html" (dict "Page" . "Structure" $structure) }}
+  {{ end }}
+{{ end }}
+
+{{/* Now call the actual PaperMod template */}}
+{{ template "_default/single.html" . }}

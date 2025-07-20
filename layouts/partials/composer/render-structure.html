@@ -1,0 +1,35 @@
+{{/*
+  render-structure.html
+  Called from single.html when Params.structure is set or inferred from template.
+  Injects structured content into the body of the post.
+*/}}
+
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title">{{ .Page.Title }}</h1>
+    {{ partial "post_meta.html" .Page }}
+  </header>
+
+  <div class="post-content">
+    {{ $params := .Page.Params }}
+    {{ $structure := .Structure | default slice }}
+    {{ $anchors := $params.anchors }}
+
+    {{ if not (eq (printf "%T" $anchors) "map[string]interface {}") }}
+      <div class="bad-anchors-type">
+        ⚠️ Invalid or missing anchors.
+      </div>
+    {{ else if eq (len $structure) 0 }}
+      <div class="missing-structure">
+        ⚠️ No structure provided or resolved from template.
+      </div>
+    {{ else }}
+      {{ range $ref := $structure }}
+        {{ partial "composer/render-block.html" (dict
+          "ref" $ref
+          "anchors" $anchors
+        ) }}
+      {{ end }}
+    {{ end }}
+  </div>
+</article>

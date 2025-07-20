@@ -11,14 +11,14 @@
     {{ end }}
   {{ end }}
 
+  {{/* If structure is defined, inject composite content */}}
   {{ if $structure }}
-    {{ partial "composer/render-composite.html" (dict
-      "Params" (merge .Params (dict "structure" $structure))
-      "Title" .Title
-      "Content" .Content
+    {{ partial "composer/render-structure.html" (dict
+      "Page" .
+      "Structure" $structure
     ) }}
   {{ else }}
-    {{/* Delegate to theme */}}
-    {{ block "main" . }}{{ end }}
+    {{/* Defer to PaperMod */}}
+    {{ partial "post/content.html" . }}
   {{ end }}
 {{ end }}

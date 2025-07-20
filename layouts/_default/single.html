@@ -17,6 +17,7 @@
       "Structure" $structure
     ) }}
   {{ else }}
+    {{/* Fallback to theme default */}}
     {{ block "main" . }}{{ end }}
   {{ end }}
 {{ end }}

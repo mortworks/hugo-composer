@@ -1,4 +1,4 @@
-{{- /* composer/route-post.html */ -}}
+{{- /* composer/route-post.html — stable version for structure & template posts */ -}}
 {{- $debug := site.Params.composer.debug | default false -}}
 
 {{- $page := . -}}
@@ -6,6 +6,7 @@
 {{- $template := .Params.template -}}
 {{- $anchors  := .Params.anchors  | default nil -}}
 
+{{/* Load structure from template if present */}}
 {{- if and (not $structure) $template -}}
   {{- $tpl := index site.Data.templates $template -}}
   {{- if $tpl -}}
@@ -13,31 +14,18 @@
     {{- if not $anchors }}{{- $anchors = $tpl.anchors -}}{{- end -}}
     {{- if $debug -}}<!-- composer: loaded template {{ $template }} -->{{- end -}}
   {{- else -}}
-    <div class="template-error">⚠️ Template <code>{{ $template }}</code> not found in <code>data/templates.yaml</code>.</div>
+    <div class="template-error">
+      ⚠️ Template <code>{{ $template }}</code> not found in <code>data/templates.yaml</code>.
+    </div>
   {{- end -}}
 {{- end -}}
 
-{{- $structureType := printf "%T" $structure -}}
-{{- $isList := and $structure (hasPrefix $structureType "[]") -}}
-{{- $isBlockList := false -}}
-{{- if $isList -}}
-  {{- $first := index $structure 0 -}}
-  {{- if $first }}{{- $isBlockList = isset $first "block" -}}{{- end -}}
-{{- end -}}
-
-{{- if $debug -}}<!-- composer: route-post active · type={{ $structureType }} · isList={{ $isList }} · isBlockList={{ $isBlockList }} {{ if $template }}· template={{ $template }}{{ end }} -->{{- end -}}
-
-{{- if $isList -}}
-  {{- if $isBlockList -}}
-    {{- partial "composer/render-structure.html" (dict "Page" $page "Structure" $structure "Anchors" $anchors) -}}
-  {{- else -}}
-    {{- if $anchors -}}
-      {{- partial "composer/render-template.html" (dict "Page" $page "Structure" $structure "Anchors" $anchors) -}}
-    {{- else -}}
-      <div class="template-error">⚠️ Structure looks like refs, but no anchors were provided.</div>
-    {{- end -}}
-  {{- end -}}
+{{/* If we have a structure list, render it */}}
+{{- if $structure -}}
+  {{- if $debug -}}<!-- composer: rendering structure with {{ len $structure }} blocks -->{{- end -}}
+  {{- partial "composer/render-structure.html" (dict "Page" $page "Structure" $structure "Anchors" $anchors) -}}
 {{- else -}}
+  {{/* Fallback to normal markdown content */}}
   {{- if not (.Param "disableAnchoredHeadings") -}}
     {{- partial "anchored_headings.html" .Content -}}
   {{- else -}}
